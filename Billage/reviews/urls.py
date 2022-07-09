@@ -1,6 +1,6 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework.routers import DefaultRouter
-from .views import ReviewViewSet, SendViewSet
+from .views import ReviewViewSet
 
 router = DefaultRouter()
 router.register('review', ReviewViewSet)
@@ -9,10 +9,10 @@ review = ReviewViewSet.as_view({
         'get': 'list',
         'post': 'create',
     })
-review_send_list = SendViewSet.as_view({
+review_send_list = ReviewViewSet.as_view({
         'get': 'list',
     })
-review_receive_list = SendViewSet.as_view({
+review_receive_list = ReviewViewSet.as_view({
         'get': 'list',
     })
 review_detail = ReviewViewSet.as_view({
@@ -20,24 +20,10 @@ review_detail = ReviewViewSet.as_view({
         'delete': 'destroy',
     })
 
-"""
-@action(detail=True, methods=['get'])
-def set_password(self, request, pk=None):
-    user = self.get_object()
-    serializer = PasswordSerializer(data=request.data)
-    if serializer.is_valid():
-        user.set_password(serializer.validated_data['password'])
-        user.save()
-        return Response({'status': 'password set'})
-    else:
-        return Response(serializer.errors,
-                        status=status.HTTP_400_BAD_REQUEST)
-
-"""
 urlpatterns = [
     path('', include(router.urls)),
     path('review/', review),
     path('review/<int:id>/', review_detail),
-    path('review/sender/<int:id>/', review_send_list),
-    path('review/receiver/<int:id>/', review_receive_list),
+    path('review/sender/', review_send_list),
+    path('review/receiver/', review_receive_list),
 ]

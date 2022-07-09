@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
-
 class UserManager(BaseUserManager):
     # 일반 user 생성
     def create_user(self, member_id, email, name, phone, password=None):
@@ -35,7 +34,6 @@ class UserManager(BaseUserManager):
         user.is_admin = True
         user.save(using=self._db)
         return user
-
 
 class User(AbstractBaseUser):
     id = models.AutoField(primary_key=True)
