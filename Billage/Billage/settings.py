@@ -25,8 +25,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 secret_file = os.path.join(BASE_DIR, 'secrets.json')
 
-with open(secret_file) as f:
+with open(secret_file,'r', encoding='UTF-8') as f:
     secrets = json.loads(f.read())
+
 
 def get_secret(setting, secrets=secrets):
     try:
@@ -58,7 +59,8 @@ INSTALLED_APPS = [
     'main',
     'accounts',
     'board',
-    'reviews'
+    'reviews',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -153,3 +155,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'accounts.User'
