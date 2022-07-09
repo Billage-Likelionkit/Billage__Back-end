@@ -8,7 +8,7 @@ router = DefaultRouter()
 # 첫 번째 인자는 url의 prefix
 # 두 번째 인자는 ViewSet
 router.register('board', BoardViewSet)
-router.register('board_comments', BoardcommentsViewSet, basename='Board_comments')
+router.register('board_comments', BoardcommentsViewSet)
 
 # 게시글 목록 보여주기 + 새로운 게시글 생성
 board_list = BoardViewSet.as_view({
@@ -24,7 +24,7 @@ board_detail = BoardViewSet.as_view({
 
 board_comments_list = BoardcommentsViewSet.as_view({
     'get':'list',
-    'post':'create'
+    'post':'create',
 })
 
 board_comments_detail = BoardcommentsViewSet.as_view({
@@ -39,9 +39,6 @@ urlpatterns =[
     path('board/<int:pk>/', board_detail),
     path('comments_list/', BoardcommentsListAPI.as_view()),
     path('board_comments/', board_comments_list),
-    #path('board_comments/<int:pk>/', board_comments_detail),
+    # path('board_comments/<int:pk>/', board_comments_detail),
     path('board_comments/<int:pk>/', BoardcommentsDetailAPI.as_view()),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-

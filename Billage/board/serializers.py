@@ -12,20 +12,26 @@ class BoardSerializer(serializers.ModelSerializer):
 ##-> Board 가 호출 됬을 때 Board info 도 함께 출력되도록
 ##-> Board에  BoardinfoSerialize에 추가
 
-class RecursiveSerializer(serializers.Serializer):
-    def to_representation(self, instance):
-        serializer = self.comment_id.__class__(instance, context=self.context)
-        return serializer.data
-
 class BoardcommentsSeriallizer(serializers.ModelSerializer):
-    reply = serializers.SerializerMethodField()
-    board_id = serializers.SlugRelatedField(queryset=Board.objects.all(), slug_field='id')
+    # reply = serializers.SerializerMethodField()
     
     class Meta:
         model = Board_comments
-        fields = '__all__'
+        fields = ('id','board_id','content','create_time','writer','comment_id')
 
     def get_reply(self, instance):
         serializer = self.__class__(instance.reply, many=True)
         serializer.bind('', self)
+        return serializer.data
+
+class BoardOnlySerializer(serializers.ModelSerializer):
+    parent_comments = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Board
+        fields = ('id', 'parent_comments')
+
+    def get_parent_comments(self, obj):
+        parent_comments = obj.comment.filter(comment_id =None)
+        serializer = BoardcommentsSeriallizer(parent_comments, many=True)
         return serializer.data

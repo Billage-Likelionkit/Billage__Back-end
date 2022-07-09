@@ -20,7 +20,7 @@ class Board_comments(models.Model):
     board_id = models.ForeignKey("Board", related_name="comment", on_delete=models.CASCADE, db_column="board_id")
     content = models.TextField(blank=False)
     create_time = models.DateTimeField(auto_now_add=True) 
-    writer = models.ForeignKey("accounts.User",  related_name="writers", on_delete=models.CASCADE)
+    writer = models.ForeignKey("accounts.User",  related_name="comment", on_delete=models.CASCADE)
     comment_id = models.ForeignKey("self", related_name="reply", on_delete=models.CASCADE, db_column="comment_id", null=True, blank=True)
 
 
