@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     'board',
     'reviews',
 
-    'rest_framework'
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

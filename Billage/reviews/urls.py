@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import ReviewViewSet
+from .views import ReviewViewSet, SendViewSet
 
 router = DefaultRouter()
 router.register('review', ReviewViewSet)
@@ -9,10 +9,12 @@ review = ReviewViewSet.as_view({
         'get': 'list',
         'post': 'create',
     })
-review_list = ReviewViewSet.as_view({
+review_send_list = SendViewSet.as_view({
         'get': 'list',
     })
-
+review_receive_list = SendViewSet.as_view({
+        'get': 'list',
+    })
 review_detail = ReviewViewSet.as_view({
         'get': 'retrieve',
         'delete': 'destroy',
@@ -36,6 +38,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('review/', review),
     path('review/<int:id>/', review_detail),
-    path('review/sender/<int:user_id>/', review_list),
-    path('review/receiver/<int:user_id>/', review_list),
+    path('review/sender/<int:id>/', review_send_list),
+    path('review/receiver/<int:id>/', review_receive_list),
 ]
