@@ -5,11 +5,13 @@ from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from accounts.models import User
 from .models import Review
 from .serializers import ReviewSerializer
+from .pagination import ReviewPagination
 
 
 class ReviewViewSet(ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    pagination_class = ReviewPagination
 
     @action(detail=False)
     def sender(self, request):

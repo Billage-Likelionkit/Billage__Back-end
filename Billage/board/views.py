@@ -2,7 +2,9 @@ from multiprocessing import AuthenticationError
 from django.shortcuts import render
 from .models import Board, Board_comments
 from .serializers import BoardSerializer, BoardcommentsSeriallizer
+from .pagination import BoardPagination, BoardcommentsPagination
 from rest_framework import viewsets
+from drf_yasg.utils import swagger_auto_schema
 # from rest_framework.permissions import IsAuthenticatedOrReadOnly
 # from rest_framework.permissions import AllowAny
 from rest_framework.generics import ListAPIView
@@ -21,6 +23,7 @@ class BoardViewSet(viewsets.ModelViewSet):
 class BoardListAPI(ListAPIView):
     queryset = Board.objects.all()
     serializer_class = BoardSerializer
+    pagination_class = BoardPagination
 
 class BoardcommentsViewSet(viewsets.ModelViewSet):
     queryset = Board_comments.objects.all()
@@ -33,11 +36,13 @@ class BoardcommentsViewSet(viewsets.ModelViewSet):
 class BoardcommentsListAPI(ListAPIView):
     queryset = Board_comments.objects.all()
     serializer_class = BoardcommentsSeriallizer
+    pagination_class = BoardcommentsPagination
 
 class BoardcommentsDetailAPI(APIView):
     def get_object(self, pk):
         return get_object_or_404(Board_comments, pk=pk)
 
+    @swagger_auto_schema(tags=["ID"], responses= {200 : '성공', 404 : '찾을 수 없음', 400 : '인풋값 에러', 500 : '서버 에러'})
     def get(self, request, pk):
         boardcomments = self.get_object(pk)
         serializer = BoardcommentsSerializer(boardcomments)
