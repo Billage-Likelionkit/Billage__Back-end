@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
+
 class UserManager(BaseUserManager):
     # 일반 user 생성
     def create_user(self, member_id, email, name, phone, password=None):
@@ -35,15 +36,16 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+
 class User(AbstractBaseUser):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(default='', max_length=150, null=False, blank=False, unique=True)
     member_id = models.IntegerField(default='', null=False, blank=False, unique=True)
     name = models.CharField(default='', max_length=20, null=False, blank=False)
     phone = models.CharField(default='', max_length=20, null=False, blank=False, unique=True)
-    
+
     # User 모델의 필수 field
-    is_active = models.BooleanField(default=True)    
+    is_active = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     
     # 헬퍼 클래스 사용
