@@ -93,7 +93,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/accounts/views.py</url>
-          <line>130</line>
+          <line>133</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>

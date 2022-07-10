@@ -61,11 +61,12 @@ class CreateView(View):
     @csrf_exempt
     def post(self, request):
         data = json.loads(request.body)
-        if '@kumoh.ac.kr' not in data['email']:
+        # 금오메일 검증
+        """if '@kumoh.ac.kr' not in data['email']:
             context = {
                 "result": "금오공과대학교 메일이 아닙니다!"
             }
-            return JsonResponse(context, status=400)
+            return JsonResponse(context, status=400)"""
 
         if User.objects.filter(email=data['email']).exists():
             context = {
