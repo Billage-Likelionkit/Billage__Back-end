@@ -61,6 +61,12 @@ class CreateView(View):
     @csrf_exempt
     def post(self, request):
         data = json.loads(request.body)
+        if '@kumoh.ac.kr' not in data['email']:
+            context = {
+                "result": "금오공과대학교 메일이 아닙니다!"
+            }
+            return JsonResponse(context, status=400)
+
         if User.objects.filter(email=data['email']).exists():
             context = {
                 "result": "이미 존재하는 email입니다!"
@@ -118,6 +124,11 @@ class LoginView(View):
 
         if User.objects.filter(email = data['email'], password = data['user_pw']).exists():
             user = User.objects.get(email=data['email'])
+            if not user.is_active:
+                context = {
+                    "result": "인증받지 않은 메일입니다!"
+                }
+                return JsonResponse(context, status=400)
             request.session['user'] = data['email']
             context = {"login_stat": "login_ok"}
             return render(request, 'home/home.html', context)
