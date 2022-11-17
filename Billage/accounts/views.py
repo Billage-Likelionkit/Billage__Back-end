@@ -6,6 +6,9 @@ from rest_framework.generics import ListAPIView
 from rest_framework import views, response, permissions, authentication
 from django.contrib.auth import login, logout
 
+from rest_framework.response import Response
+
+from rest_framework_simplejwt.serializers
 class CsrfExemptSessionAuthentication(authentication.SessionAuthentication):
     def enforce_csrf(self, request):
         return
@@ -14,6 +17,32 @@ class CsrfExemptSessionAuthentication(authentication.SessionAuthentication):
 class UserCreate(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            token = TokenObtainPairSerializer.get_token(user)
+            refresh_token = str(token)
+            access_token = str(token.access_token)
+            res = Response(
+                {
+                    "user": serializer.data,
+                    "message": "register successs",
+                    "token": {
+                        "access_token": access_token,
+                        "refresh_token": refresh_token,
+                    },
+                },
+                status=status.HTTP_200_OK,
+            )
+            
+            # jwt 토큰 => 쿠키에 저장
+            res.set_cookie("access_token", access_token, httponly=True)
+            res.set_cookie("refresh_token", refresh_token, httponly=True)
+            
+            return res
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UserListAPI(ListAPIView):
     queryset = User.objects.all()
