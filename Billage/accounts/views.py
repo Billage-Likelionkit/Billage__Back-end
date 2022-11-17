@@ -1,14 +1,15 @@
 from django.shortcuts import render
-from .serializers import UserSerializer
+from .serializers import UserSerializer, LoginSerializer
 from .models import User
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.generics import ListAPIView
 from rest_framework import views, response, permissions, authentication
 from django.contrib.auth import login, logout
 
 from rest_framework.response import Response
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from rest_framework_simplejwt.serializers
+
 class CsrfExemptSessionAuthentication(authentication.SessionAuthentication):
     def enforce_csrf(self, request):
         return
@@ -51,21 +52,26 @@ class UserListAPI(ListAPIView):
 #로그인
 class LoginView(views.APIView):
     # permission_classes = (permissions.AllowAny,)
+
     authentication_classes = (CsrfExemptSessionAuthentication,)
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        login(request, user)
-        return response.Response(UserSerializer(user).data)
+        token = serializer.validated_data
+        #user = serializer.validated_data['user']
+        #login(request, user) 레거시
+        return Response({"token":token}, status=status.HTTP_200_OK)
 
 
 class LogoutView(views.APIView):
     def post(self, request):
-        logout(request)
-        return response.Response()
+        #logout(request) 레거시 코드
 
+        response = Response({"message": "Logout success"}, status=status.HTTP_202_ACCEPTED)
+        response.delete_cookie("access_token")
+        response.delete_cookie("refresh_token")
+        return response
 
 class UserView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
